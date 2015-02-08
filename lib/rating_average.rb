@@ -1,5 +1,5 @@
 module RatingAverage
   def rating_average
-    "Has #{ratings.count} #{"rating".pluralize(ratings.count)}, average #{ratings.average(:score)}"
+    ratings.map(&:score).sum.to_f/ratings.count
   end
 end

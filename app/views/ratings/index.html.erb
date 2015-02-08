@@ -10,4 +10,6 @@
 <% end %>
 </ul>
 
-<td><%= link_to 'Create new rating', new_rating_path %></td>
+<% if not current_user.nil? %>
+  <td><%= link_to 'Create new rating', new_rating_path %></td>
+<% end %>

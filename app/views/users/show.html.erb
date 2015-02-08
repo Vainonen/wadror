@@ -23,14 +23,16 @@
       you have not yet ratings!
   <% else %>
 
-      <%= @user.rating_average %>
+      Has made <%= pluralize(@user.ratings.count, 'rating') %>, average <%= @user.rating_average %>
 
     <ul>
       <% @user.ratings.each do |rating| %>
-        <li>
-          <%= rating.beer.name %>
-          <%= rating.score %>
-        </li>
+          <li>
+            <%= rating %>
+            <% if @user == current_user %>
+                <%= link_to 'delete', rating, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
+          </li>
       <% end %>
     </ul>
   <% end %>
