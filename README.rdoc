@@ -1,4 +1,5 @@
 == README
 
 Heroku-osoite: https://peaceful-wave-3253.herokuapp.com/breweries
-Travis-osoite: https://travis-ci.org/profile/Vainonen
+
+Travis-osoite: https://travis-ci.org/Vainonen/wadror
