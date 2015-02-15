@@ -75,8 +75,11 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 gem 'rspec-its'
+
+gem 'httparty'
 
 gem 'bcrypt-ruby', '~> 3.1.2'

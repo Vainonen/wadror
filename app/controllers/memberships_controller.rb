@@ -28,7 +28,7 @@ class MembershipsController < ApplicationController
     @membership = Membership.create params.require(:membership).permit(:beer_club_id)
     if @membership.save
       current_user.memberships << @membership
-      redirect_to user_path current_user
+      redirect_to :back, notice: current_user.username+', welcome to the club!'
     else
       @beer_clubs = BeerClub.all
       render :new
@@ -52,12 +52,13 @@ class MembershipsController < ApplicationController
   # DELETE /memberships/1
   # DELETE /memberships/1.json
   def destroy
+    @user == current_user
     @membership.destroy
-    respond_to do |format|
-      format.html { redirect_to memberships_url }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to users_path current_user }
+        format.json { head :no_content }
+      end
     end
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
