@@ -83,3 +83,8 @@ gem 'rspec-its'
 gem 'httparty'
 
 gem 'bcrypt-ruby', '~> 3.1.2'
+
+gem 'bootstrap-sass'
+group :development do
+  gem 'rails_layout'
+end

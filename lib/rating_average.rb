@@ -1,5 +1,8 @@
 module RatingAverage
-  def rating_average
+  extend ActiveSupport::Concern
+
+  def average_rating
     ratings.map(&:score).sum.to_f/ratings.count
   end
+
 end

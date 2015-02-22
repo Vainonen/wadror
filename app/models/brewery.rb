@@ -1,21 +1,19 @@
 class Brewery < ActiveRecord::Base
-  has_many :beers, dependent: :destroy
-  has_many :ratings, through: :beers
   include RatingAverage
 
+  validates :name, presence: true
   validates :year, numericality: { greater_than_or_equal_to: 1024,
                                    less_than_or_equal_to: ->(_){Time.now.year} }
-  validates :name, length: { minimum: 1 }
 
-  def print_report
-    puts name
-    puts "established at year #{year}"
-    puts "number of beers #{beers.count}"
-    end
+  scope :active, -> { where active:true }
+  scope :retired, -> { where active:[nil,false] }
 
-  def restart
-    self.year = 2015
-    puts "changed year to #{year}"
+  has_many :beers, dependent: :destroy
+  has_many :ratings, through: :beers
+
+  def self.top(n)
+    br = Brewery.all.select { |b| !b.average_rating.nan? }
+    sorted_by_rating_in_desc_order = br.sort_by { |b| -(b.average_rating||0) }.take(n)
   end
-
 end
+

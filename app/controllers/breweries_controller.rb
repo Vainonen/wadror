@@ -5,7 +5,8 @@ class BreweriesController < ApplicationController
   # GET /breweries
   # GET /breweries.json
   def index
-    @breweries = Brewery.all
+    @active_breweries = Brewery.active
+    @retired_breweries = Brewery.retired
   end
 
   # GET /breweries/1
@@ -30,9 +31,9 @@ class BreweriesController < ApplicationController
     respond_to do |format|
       if @brewery.save
         format.html { redirect_to @brewery, notice: 'Brewery was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @brewery }
+        format.json { render :show, status: :created, location: @brewery }
       else
-        format.html { render action: 'new' }
+        format.html { render :new }
         format.json { render json: @brewery.errors, status: :unprocessable_entity }
       end
     end
@@ -44,9 +45,9 @@ class BreweriesController < ApplicationController
     respond_to do |format|
       if @brewery.update(brewery_params)
         format.html { redirect_to @brewery, notice: 'Brewery was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render :show, status: :ok, location: @brewery }
       else
-        format.html { render action: 'edit' }
+        format.html { render :edit }
         format.json { render json: @brewery.errors, status: :unprocessable_entity }
       end
     end
@@ -57,12 +58,22 @@ class BreweriesController < ApplicationController
   def destroy
     @brewery.destroy
     respond_to do |format|
-      format.html { redirect_to breweries_url }
+      format.html { redirect_to breweries_url, notice: 'Brewery was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
+  def toggle_activity
+    brewery = Brewery.find(params[:id])
+    brewery.update_attribute :active, (not brewery.active)
+
+    new_status = brewery.active? ? "active" : "retired"
+
+    redirect_to :back, notice:"brewery activity status changed to #{new_status}"
+  end
+
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_brewery
       @brewery = Brewery.find(params[:id])
@@ -70,13 +81,7 @@ class BreweriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def brewery_params
-      params.require(:brewery).permit(:name, :year)
+      params.require(:brewery).permit(:name, :year, :active)
     end
 
-  def authenticate
-    admin_accounts = { "admin" => "secret", "pekka" => "beer", "arto" => "foobar", "matti" => "ittam"}
-    authenticate_or_request_with_http_basic do |username, password|
-      admin_accounts[username] == password
-    end
-  end
 end

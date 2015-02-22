@@ -14,8 +14,8 @@ class MembershipsController < ApplicationController
 
   # GET /memberships/new
   def new
+    @beer_clubs = BeerClub.all.reject{ |b| b.members.include? current_user }
     @membership = Membership.new
-    @beer_clubs = BeerClub.all
   end
 
   # GET /memberships/1/edit
@@ -25,13 +25,18 @@ class MembershipsController < ApplicationController
   # POST /memberships
   # POST /memberships.json
   def create
-    @membership = Membership.create params.require(:membership).permit(:beer_club_id)
-    if @membership.save
-      current_user.memberships << @membership
-      redirect_to :back, notice: current_user.username+', welcome to the club!'
-    else
-      @beer_clubs = BeerClub.all
-      render :new
+    @membership = Membership.new(membership_params)
+    @membership.user = current_user
+
+    respond_to do |format|
+      if @membership.save
+        format.html { redirect_to @membership.beer_club, notice: "#{current_user.username} welcome to the club!" }
+        format.json { render :show, status: :created, location: @membership }
+      else
+        @beer_clubs = BeerClub.all.reject{ |b| b.members.include? current_user }
+        format.html { render :new }
+        format.json { render json: @membership.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -41,9 +46,9 @@ class MembershipsController < ApplicationController
     respond_to do |format|
       if @membership.update(membership_params)
         format.html { redirect_to @membership, notice: 'Membership was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render :show, status: :ok, location: @membership }
       else
-        format.html { render action: 'edit' }
+        format.html { render :edit }
         format.json { render json: @membership.errors, status: :unprocessable_entity }
       end
     end
@@ -52,13 +57,12 @@ class MembershipsController < ApplicationController
   # DELETE /memberships/1
   # DELETE /memberships/1.json
   def destroy
-    @user == current_user
     @membership.destroy
-      respond_to do |format|
-        format.html { redirect_to users_path current_user }
-        format.json { head :no_content }
-      end
+    respond_to do |format|
+      format.html { redirect_to current_user, notice: "Membership in #{@membership.beer_club.name} ended." }
+      format.json { head :no_content }
     end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -68,6 +72,6 @@ class MembershipsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def membership_params
-      params.require(:membership).permit(:beer_club_id, :user_id)
+      params.require(:membership).permit(:user_id, :beer_club_id)
     end
 end

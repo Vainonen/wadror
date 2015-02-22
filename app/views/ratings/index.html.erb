@@ -1,15 +1,71 @@
-<h2>List of ratings</h2>
+<h2>Rating Statistics</h2>
 
-<p> Number of ratings: <%= @ratings.count %> </p>
+    <div class="row">
+      <div class="col-xs-4">
+        <h3>Top breweries</h3>
+        <table class="table table-hover">
+          <% @top_breweries.each do |top| %>
+              <tr>
+                <td><%= top.name %></td>
+                <td><%= round(top.average_rating) %></td>
+              </tr>
+          <% end %>
+        </table>
+      </div>
+      <div class="col-xs-4">
+        <h3>Top beers</h3>
+        <table class="table table-hover">
+          <% @top_beers.each do |top| %>
+              <tr>
+                <td><%= top.name %></td>
+                <td><%= round(top.average_rating) %></td>
+              </tr>
+          <% end %>
+        </table>
+      </div>
+      <div class="col-xs-4">
+        <h3>Top styles</h3>
+        <table class="table table-hover">
+          <% @top_styles.each do |top| %>
+              <tr>
+                <td><%= top.name %></td>
+                <td><%= round(top.average_rating) %></td>
+              </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <h3>Most active users</h3>
+    <table class="table table-hover">
+      <tr>
+        <td><b>username</b></td>
+        <td><b>number of ratings</b></td>
+      </tr>
+      <% @top_users.each do |top| %>
+          <tr>
+            <td><%= top.username %></td>
+            <td><%= top.ratings.count %></td>
+          </tr>
+      <% end %>
+    </table>
+  </div>
+  <div class="col-sm-9">
+    <h3>Recent ratings</h3>
+    <table class="table table-hover">
+      <tr>
+        <td><b>username</b></td>
+        <td><b>rating</b></td>
+      </tr>
+      <% @ratings.each do |rating| %>
+          <tr>
+            <td><%= link_to rating.user.username, rating.user %></td>
+            <td><%= rating %></td>
+          </tr>
+      <% end %>
+    </table>
+    </div>
+</div>
 
-<ul>
-  <% @ratings.each do |rating| %>
-      <li> <%= rating %>
-        <%= link_to rating.user.username, rating.user %>
-      </li>
-<% end %>
-</ul>
-
-<% if not current_user.nil? %>
-  <td><%= link_to 'Create new rating', new_rating_path %></td>
-<% end %>
+<%= link_to 'New Rating', new_rating_path, class:"btn btn-primary" if current_user %>

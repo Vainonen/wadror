@@ -4,8 +4,8 @@
       <h2><%= pluralize(@brewery.errors.count, "error") %> prohibited this brewery from being saved:</h2>
 
       <ul>
-      <% @brewery.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+      <% @brewery.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
       <% end %>
       </ul>
     </div>
@@ -18,6 +18,10 @@
   <div class="field">
     <%= f.label :year %><br>
     <%= f.number_field :year %>
+  </div>
+  <div class="field">
+    <%= f.label :active %>
+    <%= f.check_box :active %>
   </div>
   <div class="actions">
     <%= f.submit %>
