@@ -5,32 +5,32 @@
 </h2>
 
 <% if @user.ratings.empty? %>
-  <p>has not yet rated any beers</p>
+    <p>has not yet rated any beers</p>
 <% else %>
-  <p>
-    Has made <%= pluralize(@user.ratings.count, 'rating') %>, average <%= round(@user.average_rating) %>
-  </p>
+    <p>
+      Has made <%= pluralize(@user.ratings.count, 'rating') %>, average <%= round(@user.average_rating) %>
+    </p>
 
-  <p>Favorite brewery: <%=@user.favorite_brewery.name %> </p>
-  <p>Favorite beer: <%=@user.favorite_beer %> </p>
-  <p>Favorite style: <%=@user.favorite_style %> </p>
+    <p>Favorite brewery: <%=@user.favorite_brewery.name %> </p>
+    <p>Favorite beer: <%=@user.favorite_beer %> </p>
+    <p>Favorite style: <%=@user.favorite_style %> </p>
 <% end %>
 
 <% if @user.beer_clubs.any? %>
-  member of
-  <% @user.beer_clubs.each do |club| %>
-      <%= link_to club.name, club %>
-  <% end %>
+    member of
+    <% @user.beer_clubs.each do |club| %>
+        <%= link_to club.name, club %>
+    <% end %>
 <% end %>
 
 <ul>
   <% @user.ratings.each do |rating| %>
-    <li>
-      <%= rating %>
-      <% if @user == current_user %>
-        <%= link_to 'delete', rating, method: :delete, data: { confirm: 'Are you sure?' } %>
-      <% end %>
-    </li>
+      <li>
+        <%= rating %>
+        <% if @user == current_user %>
+            <%= link_to 'delete', rating, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% end %>
+      </li>
   <% end %>
 </ul>
 
@@ -44,6 +44,6 @@
 <% end %>
 
 <% if @user == current_user %>
-  <%= link_to 'Change password', edit_user_path(@user), class:"btn btn-primary" %>
-  <%= link_to 'Delete account', @user, class:'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %></
+    <%= link_to 'Change password', edit_user_path(@user), class:"btn btn-primary" %>
+    <%= link_to 'Delete account', @user, class:'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %></
 <% end %>

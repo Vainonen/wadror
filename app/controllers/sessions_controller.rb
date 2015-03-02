@@ -3,6 +3,9 @@ class SessionsController < ApplicationController
     # renderöi kirjautumissivun
   end
 
+  def create_oauth
+  end
+
   def create
     user = User.find_by username: params[:username]
     if user && user.authenticate(params[:password]) && user.active

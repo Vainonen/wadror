@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   resources :users do
     post 'toggle_freeze', on: :member
   end
+  get 'beerlist', to:'beers#list'
+  get 'ngbeerlist', to:'beers#nglist'
+  get 'brewerylist', to:'breweries#list'
+  get 'auth/:provider/callback', to: 'sessions#create_oauth'
 # The priority is based upon order of creation: first created -> highest priority.
 # See how all your routes lay out with "rake routes".
 # You can have the root of your site routed with "root"
